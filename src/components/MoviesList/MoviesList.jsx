@@ -2,14 +2,13 @@ import { Link } from 'react-router-dom';
 import { Img, List, Title, Card } from './MoviesList.styled';
 import img from '../../img/wallpaper-error.jpeg';
 
-const MoviesList = ({ movies }) => {
+const MoviesList = ({ movies, location }) => {
   return (
     <List>
-      {movies.map(({ id, title, poster_path }) => {
-			console.log(poster_path)
+		  {movies.map(({ id, title, poster_path }) => {
 				return (
           <Card key={id}>
-            <Link to={`/movies/${id}`}>
+            <Link to={`/movies/${id}`} state={{ from: location }}>
               <Img
                 src={
                   poster_path

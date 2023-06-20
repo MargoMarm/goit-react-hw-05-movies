@@ -1,15 +1,17 @@
 import MoviesList from 'components/MoviesList/MoviesList';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { getTrendingMovies } from '../../services/API';
 const Home = () => {
-  const [movies, setMovies] = useState([]);
-  console.log(movies);
+	const [movies, setMovies] = useState([]);
+	const location = useLocation();
+  console.log(location);
   useEffect(() => {
     getTrendingMovies().then(data => setMovies(data.results));
   }, []);
 
-  return <MoviesList movies={movies} />;
+  return <MoviesList movies={movies} location={location} />;
 };
 
 export default Home;

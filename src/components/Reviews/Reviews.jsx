@@ -8,16 +8,21 @@ const Reviews = () => {
   useEffect(() => {
     getMovieReview(id).then(data => setReview(data));
   }, [id]);
-  console.log(review);
   return (
-    <ul>
-      {review.map(({ id, author, content }) => (
-        <li key={id}>
-          <p>{author}</p>
-          <p>{content}</p>
-        </li>
-      ))}
-    </ul>
+    <>
+      {review.length > 0 ? (
+        <ul>
+          {review.map(({ id, author, content }) => (
+            <li key={id}>
+              <p>{author}</p>
+              <p>{content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        "We don't have any reviews for this movie"
+      )}
+    </>
   );
 };
 

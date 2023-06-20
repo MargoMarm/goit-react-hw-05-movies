@@ -1,20 +1,23 @@
+import BackLink from 'components/BackLink/BackLink';
 import { useEffect, useState } from 'react';
-import { useParams, Link, Outlet } from 'react-router-dom';
+import { useParams, Link, Outlet, useLocation } from 'react-router-dom';
 import { getMovieById } from 'services/API';
 import { Wrapper, Poster } from './MovieDetails.styles';
 
 const MovieDetails = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState({});
+	const [movie, setMovie] = useState({});
+	const location = useLocation();
+	const BackLinkHref = location.state?.from ?? "/";
+console.log(location.state)
   useEffect(() => {
     getMovieById(id).then(data => setMovie(data));
   }, [id]);
 	
-	
   const { poster_path, title, vote_average, overview, genres } = movie;
-console.log("detal", poster_path)
   return (
-    <main>
+	  <main>
+		  <BackLink to={BackLinkHref} />
       <Wrapper>
         <Poster src={poster_path && `https://image.tmdb.org/t/p/w300${poster_path}`} />
         <p>{title}</p>
