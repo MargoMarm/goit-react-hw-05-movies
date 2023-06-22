@@ -1,35 +1,52 @@
 import MoviesList from 'components/MoviesList/MoviesList';
 import { useState, useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { getMovieByQuery } from 'services/API';
-
+import Error from 'components/Error/Error';
+import { Loader } from 'components/Loader/Loader';
+import SearchForm from 'components/SearchForm/SearchForm';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [movies, setMovies] = useState(null);
+  const [totalResults, setTotalResults] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const query = searchParams.get('query') ?? '';
-	const [searchQuery, setSearchQuery] = useState(null);
-	const location = useLocation();
 
   useEffect(() => {
     if (query === '') return;
-
-    getMovieByQuery(query).then(data => setSearchQuery(data));
+    const startFetching = async () => {
+      setLoading(true);
+      try {
+        const { results, total_results } = await getMovieByQuery(query);
+        setMovies(results);
+        setTotalResults(total_results);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    startFetching();
   }, [query]);
-
-	
-	const handleSubmit = e => {
-	  e.preventDefault();
-		const value= e.currentTarget.elements.search.value;
-		const params = value !== '' ? { query: value } : {};
-		setSearchParams(params);
-	};
+  const setParams = query => {
+    const params = query !== '' ? { query } : {};
+    setSearchParams(params);
+  };
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name='search' />
-        <button type="submit">Search</button>
-      </form>
-		  {searchQuery && <MoviesList movies={searchQuery} location={ location} />}
+      <SearchForm setParams={setParams} />
+      {loading && <Loader />}
+      {movies && !loading && <MoviesList movies={movies} />}
+      {totalResults === 0 && (
+        <Error errorText={'Sorry, nothing has been found at your request'} />
+      )}
+      {error && (
+        <Error
+          errorText={`Something went wrong... ${error}. Please try again.`}
+        />
+      )}
     </div>
   );
 };

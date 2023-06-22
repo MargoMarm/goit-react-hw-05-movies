@@ -1,12 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Img, List, Title, Card } from './MoviesList.styled';
 import img from '../../img/wallpaper-error.jpeg';
+import PropTypes from 'prop-types';
 
-const MoviesList = ({ movies, location }) => {
+const MoviesList = ({ movies }) => {
+  const location = useLocation();
   return (
     <List>
-		  {movies.map(({ id, title, poster_path }) => {
-				return (
+      {movies.map(({ id, title, poster_path }) => {
+        return (
           <Card key={id}>
             <Link to={`/movies/${id}`} state={{ from: location }}>
               <Img
@@ -27,3 +29,7 @@ const MoviesList = ({ movies, location }) => {
 };
 
 export default MoviesList;
+
+MoviesList.propTypes = {
+  movies: PropTypes.array.isRequired,
+};

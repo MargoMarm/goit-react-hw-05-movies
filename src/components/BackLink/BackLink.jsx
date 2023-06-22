@@ -1,11 +1,13 @@
-const { Link } = require("react-router-dom")
+import  {StyledLink} from './BackLink.styled';
+import { CgArrowLeftR } from 'react-icons/cg';
 
-const BackLink = ({to}) => {
-	return (
-		<Link to={to}>
-			Go Back
-		</Link>
-	)
-}
+const BackLink = ({ to }) => {
+  return (
+    <StyledLink to={to}>
+      <CgArrowLeftR /> <span>Go Back</span>
+    </StyledLink>
+  );
+};
 
 export default BackLink;
+
